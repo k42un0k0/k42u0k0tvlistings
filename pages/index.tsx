@@ -22,7 +22,6 @@ export default function Home(): JSX.Element {
   if (error != null) {
     return <div>何かしらのエラー</div>;
   }
-  console.log(data);
   return (
     <div>
       <Input
