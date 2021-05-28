@@ -5,7 +5,7 @@ export default function Timetable({ data }: Props): JSX.Element {
   const map = mapByCh(data.items);
   return (
     <div style={{ display: "flex" }}>
-      {Array.from(map.entries()).map(([ch, items]) => {
+      {[...map.entries()].map(([ch, items]) => {
         return (
           <div key={ch}>
             <h2>{ch}</h2>
@@ -26,7 +26,16 @@ function mapByCh(items: Item[]): Map<string, ParsedItem[]> {
     const arr = map.get(parsedItem.content.ch) || [];
     map.set(parsedItem.content.ch, arr.concat(parsedItem));
   });
-  return map;
+  const sortedMap = new Map(
+    [...map.entries()].sort(([a], [b]) => {
+      const ach = parseInt(a.match(/\(Ch.(\d*)\)/)?.[1]) || a;
+      const bch = parseInt(b.match(/\(Ch.(\d*)\)/)?.[1]) || b;
+      if (ach > bch || typeof ach == "string") return 1;
+      if (ach < bch || typeof bch == "string") return -1;
+      return 0;
+    })
+  );
+  return sortedMap;
 }
 
 type ParsedItem = {
