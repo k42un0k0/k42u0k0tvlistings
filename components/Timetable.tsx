@@ -1,114 +1,45 @@
-import { setMinutes, setHours, addDays, compareDesc, parse } from "date-fns";
+import { createRef, useEffect, useRef } from "react";
+import Head from "./Head/Head";
+import Column from "./Timetable/Column";
+import { Data, mapByCh } from "./Timetable/utils";
 
 type Props = { data: Data };
 export default function Timetable({ data }: Props): JSX.Element {
   const map = mapByCh(data.items);
+  const els = useRef(data.items.map(() => createRef<HTMLDivElement>()));
+
   return (
-    <div style={{ display: "flex" }}>
-      {[...map.entries()].map(([ch, items]) => {
-        return (
-          <div key={ch}>
-            <h2>{ch}</h2>
-            {items.map((item) => {
-              return <div key={item.content.ch + item.date}>{item.title}</div>;
-            })}
-          </div>
-        );
-      })}
+    <div>
+      <div style={{ display: "flex" }}>
+        {[...map.keys()].map((entity, i) => {
+          return (
+            <Head
+              key={entity}
+              style={{
+                border: "1px solid",
+                boxSizing: "border-box",
+                flex: 1,
+                minWidth: 100,
+              }}
+              bodyRef={els.current[i]}
+            >
+              {entity}
+            </Head>
+          );
+        })}
+      </div>
+      <div style={{ display: "flex" }}>
+        {[...map.entries()].map((entity, i) => {
+          return (
+            <Column
+              key={entity[0]}
+              ref={els.current[i]}
+              entity={entity}
+              indexmod12={i % 12}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
-
-function mapByCh(items: Item[]): Map<string, ParsedItem[]> {
-  const map = new Map<sttring, ParsedItem[]>();
-  items.forEach((item) => {
-    const parsedItem = parseItem(item);
-    const arr = map.get(parsedItem.content.ch) || [];
-    map.set(parsedItem.content.ch, arr.concat(parsedItem));
-  });
-  const sortedMap = new Map(
-    [...map.entries()].sort(([a], [b]) => {
-      const ach = parseInt(a.match(/\(Ch.(\d*)\)/)?.[1]) || a;
-      const bch = parseInt(b.match(/\(Ch.(\d*)\)/)?.[1]) || b;
-      if (ach > bch || typeof ach == "string") return 1;
-      if (ach < bch || typeof bch == "string") return -1;
-      return 0;
-    })
-  );
-  return sortedMap;
-}
-
-type ParsedItem = {
-  content: Content;
-  date: string;
-  title: string;
-  link: string;
-  "dc:date": string;
-  contentSnippet: string;
-  isoDate: Date;
-};
-function parseItem(item: Item): ParsedItem {
-  return {
-    ...item,
-    content: parseContent(item.content, item.date),
-  };
-}
-
-type Content = {
-  start: Date;
-  end: Date;
-  ch: string;
-};
-/**
- * contentを扱いやすい形にparseする
- * @module hello
- * @param {string} content - パースする対象
- * example:
- * - 5/30 2:00～2:30 [テレビ朝日(Ch.5)]
- * - 5/30 22:30～23:00 [ＴＯＫＹＯ　ＭＸ１(Ch.9)]
- * @param {string} baseDate - ベースとする日付
- * @return {Content}
- */
-function parseContent(content: string, baseDate: string): Content {
-  const match = content.match(/(.*)\[(.*)\]/);
-  const datetime = match[1].split(" ");
-  const ch = match[2];
-  const date = new Date(baseDate);
-  const time = datetime[1].split("～");
-  const startTime = time[0].split(":");
-  const endTime = time[1].split(":");
-  const start = setMinutes(
-    setHours(date, parseInt(startTime[0])),
-    parseInt(startTime[1])
-  );
-  let end = setMinutes(
-    setHours(date, parseInt(endTime[0])),
-    parseInt(endTime[1])
-  );
-  if (compareDesc(start, end) === -1) {
-    end = addDays(end, 1);
-  }
-  return {
-    start,
-    end,
-    ch,
-  };
-}
-type Item = {
-  date: string;
-  title: string;
-  link: string;
-  "dc:date": string;
-  content: string;
-  contentSnippet: string;
-  isoDate: Date;
-};
-
-type Data = {
-  items: Item[];
-  publisher: string;
-  creator: string;
-  title: string;
-  description: string;
-  link: string;
-};

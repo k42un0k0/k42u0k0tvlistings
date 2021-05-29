@@ -1,10 +1,5 @@
-import { ChangeEvent, useEffect, useState } from "react";
-
-let t: number = 0;
-function debounce(cb: () => void, ms: number) {
-  clearTimeout(t);
-  t = setTimeout(cb, ms);
-}
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { debounce } from "../lib/utils";
 
 type Props = {
   value: string;
@@ -16,12 +11,16 @@ export default function Input({ value, onChange }: Props) {
   useEffect(() => {
     setTarget(value);
   }, [value]);
+  const onChange_d = useMemo(
+    () => debounce((e: ChangeEvent<HTMLInputElement>) => onChange(e), 500),
+    [onChange]
+  );
   return (
     <input
       value={target}
       onChange={(e) => {
         e.persist();
-        debounce(() => onChange(e), 500);
+        onChange_d(e);
         setTarget(e.target.value);
       }}
     />
