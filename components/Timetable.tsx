@@ -105,7 +105,11 @@ function SwipableFlex({
     return <div style={style}>{children}</div>;
   }
   return (
-    <SwipeableViews index={index} onChangeIndex={onChangeIndex}>
+    <SwipeableViews
+      containerStyle={{ height: "100%" }}
+      index={index}
+      onChangeIndex={onChangeIndex}
+    >
       {children}
     </SwipeableViews>
   );
