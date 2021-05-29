@@ -7,12 +7,12 @@ type Props = {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
-export default function Input({ value, onChange }: Props) {
-  const [target, setTarget] = useState("");
+export default function Input({ value: p_value, onChange }: Props) {
+  const [value, setValue] = useState("");
   useEffect(() => {
-    setTarget(value);
-  }, [value]);
-  const onChange_d = useMemo(
+    setValue(p_value);
+  }, [p_value]);
+  const d_onChange = useMemo(
     () => debounce((e: ChangeEvent<HTMLInputElement>) => onChange(e), 500),
     [onChange]
   );
@@ -20,11 +20,11 @@ export default function Input({ value, onChange }: Props) {
     <Container>
       <Tooltip>検索</Tooltip>
       <Base
-        value={target}
+        value={value}
         onChange={(e) => {
           e.persist();
-          onChange_d(e);
-          setTarget(e.target.value);
+          d_onChange(e);
+          setValue(e.target.value);
         }}
       />
     </Container>

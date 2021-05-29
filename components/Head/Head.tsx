@@ -5,7 +5,6 @@ import {
   VFC,
   ReactNode,
   ComponentProps,
-  useLayoutEffect,
 } from "react";
 
 type Props<T extends VFC<any> | keyof JSX.IntrinsicElements> = {
@@ -29,16 +28,12 @@ export default function Head<
         bodyRef.current.style.width = headRef.current.offsetWidth + "px";
       }
     };
+    if (bodyRef && bodyRef.current && headRef.current) {
+      bodyRef.current.style.width = headRef.current.offsetWidth + "px";
+    }
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
-  useLayoutEffect(() => {
-    requestAnimationFrame(() => {
-      if (bodyRef && bodyRef.current && headRef.current) {
-        bodyRef.current.style.width = headRef.current.offsetWidth + "px";
-      }
-    });
-  });
 
   return (
     <Component ref={headRef} {...props}>

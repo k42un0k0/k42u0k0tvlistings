@@ -1,26 +1,20 @@
-import { createRef, ReactNode, useEffect, useRef, useState } from "react";
+import { MutableRefObject, ReactNode, useState } from "react";
 import Head from "./Head/Head";
 import Column from "./Timetable/Column";
 import { Data, mapByCh } from "./Timetable/utils";
 import SwipeableViews from "react-swipeable-views";
 import { useMediaQuery } from "@material-ui/core";
 import { generateBackGround } from "../lib/utils";
+import { useRefList } from "./hooks";
+import styled from "styled-components";
 
 type Props = { data: Data };
 export default function Timetable({ data }: Props): JSX.Element {
   const map = mapByCh(data.items);
-  const els = useRef(data.items.map(() => createRef<HTMLDivElement>()));
-  const matches = useMediaQuery((theme: any) => theme.breakpoints.up("sm"));
+  const els = useRefList<HTMLDivElement>(data.items.length);
   const [index, setIndex] = useState(0);
   return (
-    <div
-      style={{
-        flex: 1,
-        display: "grid",
-        gridTemplateColumns: "auto 1fr",
-        gridTemplateRows: "auto 1fr",
-      }}
-    >
+    <Container>
       <div
         style={{
           gridRow: "1 / 2",
@@ -43,7 +37,11 @@ export default function Timetable({ data }: Props): JSX.Element {
         <div>24:00</div>
       </div>
       <SwipableFlex
-        style={{ display: "flex", gridRow: "1 / 2", gridColumn: "2 / 3" }}
+        style={{
+          display: "flex",
+          gridRow: "1 / 2",
+          gridColumn: "2 / 3",
+        }}
         index={index}
         onChangeIndex={(index) => {
           setIndex(index);
@@ -56,7 +54,6 @@ export default function Timetable({ data }: Props): JSX.Element {
               style={{
                 boxSizing: "border-box",
                 flex: 1,
-                minWidth: 100,
                 padding: "1em",
                 background: generateBackGround(i % 12),
               }}
@@ -68,7 +65,11 @@ export default function Timetable({ data }: Props): JSX.Element {
         })}
       </SwipableFlex>
       <SwipableFlex
-        style={{ display: "flex", gridRow: "2 / 3", gridColumn: "2 / 3" }}
+        style={{
+          display: "flex",
+          gridRow: "2 / 3",
+          gridColumn: "2 / 3",
+        }}
         index={index}
         onChangeIndex={(index) => {
           setIndex(index);
@@ -85,9 +86,17 @@ export default function Timetable({ data }: Props): JSX.Element {
           );
         })}
       </SwipableFlex>
-    </div>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  flex: 1;
+  display: grid;
+  flex-direction: column;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+`;
 
 function SwipableFlex({
   children,
