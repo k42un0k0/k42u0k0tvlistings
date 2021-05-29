@@ -33,6 +33,10 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-## アニメのrss
+## アニメの rss
 
 https://www.tvkingdom.jp/rss/schedulesBySearch.action?condition.genres%5B0%5D.parentId=107000&condition.genres%5B0%5D.childId=107100&stationPlatformId=1&condition.keyword=&submit=%E6%A4%9C%E7%B4%A2&index=240
+
+## メモ
+
+chrome devtools の ios 系と surface で iframe の scroll が効かない問題
