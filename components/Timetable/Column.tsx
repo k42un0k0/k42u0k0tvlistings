@@ -1,5 +1,6 @@
 import { differenceInCalendarDays } from "date-fns";
 import { forwardRef } from "react";
+import { generateBackGround } from "../../lib/utils";
 import Cell from "./Cell";
 import { ParsedItem } from "./utils";
 
@@ -17,8 +18,8 @@ export default forwardRef<HTMLDivElement, Props>(function Column(
       style={{
         flexShrink: 0,
         position: "relative",
-        height: "100vh",
-        background: `linear-gradient(${colors[indexmod12].start}, ${colors[indexmod12].end})`,
+        height: "100%",
+        background: generateBackGround(indexmod12),
       }}
     >
       {[...filterByDay(entity[1], new Date(Date.now()))]}
