@@ -8,14 +8,15 @@ import { ParsedItem } from "./utils";
 type Props = {
   indexmod12: number;
   entity: [string, ParsedItem[]];
+  date: Date;
 };
 export default forwardRef<HTMLDivElement, Props>(function Column(
-  { indexmod12, entity }: Props,
+  { indexmod12, entity, date }: Props,
   ref
 ): JSX.Element {
   return (
     <Container indexmod12={indexmod12} ref={ref}>
-      {[...filterByDay(entity[1], new Date(Date.now()))]}
+      {[...filterByDay(entity[1], date)]}
     </Container>
   );
 });
@@ -30,7 +31,7 @@ const Container = styled.div<{ indexmod12: number }>`
 
 function* filterByDay(items: ParsedItem[], date: Date) {
   for (let item of items) {
-    if (differenceInCalendarDays(date, item.content.start) > 0) {
+    if (differenceInCalendarDays(date, item.content.end) > 0) {
       continue;
     } else if (differenceInCalendarDays(date, item.content.start) < 0) {
       return;

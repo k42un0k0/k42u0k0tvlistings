@@ -1,10 +1,24 @@
-import { setMinutes, setHours, addDays, compareDesc } from "date-fns";
+import {
+  setMinutes,
+  setHours,
+  addDays,
+  compareDesc,
+  differenceInCalendarDays,
+  startOfDay,
+} from "date-fns";
 
-export function mapByCh(items: Item[]): Map<string, ParsedItem[]> {
+export function mapByCh(items: Item[]): [Map<string, ParsedItem[]>, Date[]] {
   const map = new Map<string, ParsedItem[]>();
+  let prevDate = startOfDay(new Date());
+  let dateArr: Date[] = [prevDate];
   items.forEach((item) => {
     const parsedItem = parseItem(item);
     const arr = map.get(parsedItem.content.ch) || [];
+    if (differenceInCalendarDays(prevDate, parsedItem.content.start)) {
+      dateArr = dateArr.concat(
+        startOfDay((prevDate = parsedItem.content.start))
+      );
+    }
     map.set(parsedItem.content.ch, arr.concat(parsedItem));
   });
   const sortedMap = new Map(
@@ -16,7 +30,7 @@ export function mapByCh(items: Item[]): Map<string, ParsedItem[]> {
       return 0;
     })
   );
-  return sortedMap;
+  return [sortedMap, dateArr];
 }
 
 export type ParsedItem = {

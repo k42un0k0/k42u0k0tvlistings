@@ -17,25 +17,28 @@ export default function Home(): JSX.Element {
   return (
     <Container>
       <Header />
-      <Content error={error} data={data} />
+      <Content error={error} data={data} urlInQuery={urlInQuery as string} />
     </Container>
   );
 }
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 200vh;
 `;
 
 type ContentProps = {
   error: any;
   data: AxiosResponse<Data>;
+  urlInQuery: string;
 };
 
-function Content({ error, data }: ContentProps): JSX.Element {
+function Content({ error, data, urlInQuery }: ContentProps): JSX.Element {
   if (error != null) {
     return <div>エラーが起きてるようです、検索窓を確認してください</div>;
+  } else if (urlInQuery === "") {
+    return <div></div>;
   } else if (data == null) {
     return <div>Now Loading...</div>;
   } else {
