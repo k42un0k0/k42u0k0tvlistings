@@ -37,6 +37,10 @@ export default function Timetable({ data }: Props): JSX.Element {
           gridRow: "2 / span 1",
           gridColumn: "1 / span 1",
           background: generateBackGround(1),
+          position: "sticky",
+          top: 0,
+          left: 0,
+          zIndex: 3,
         }}
       ></div>
       <div
@@ -47,6 +51,9 @@ export default function Timetable({ data }: Props): JSX.Element {
           flexDirection: "column",
           justifyContent: "space-between",
           background: generateBackGround(1),
+          position: "sticky",
+          left: 0,
+          zIndex: 1,
         }}
       >
         {[...Array(25).fill(null).keys()].map((i) => {
@@ -65,6 +72,9 @@ export default function Timetable({ data }: Props): JSX.Element {
           display: "flex",
           gridRow: "2 / span 1",
           gridColumn: "2 / span 1",
+          position: "sticky",
+          top: 0,
+          zIndex: 1,
         }}
         // index={index}
         // onChangeIndex={(index) => {
