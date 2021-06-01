@@ -37,6 +37,6 @@ function Content({ error, data, urlInQuery }: ContentProps): JSX.Element {
   } else if (data == null) {
     return <div>Now Loading...</div>;
   } else {
-    return <Timetable></Timetable>;
+    return <Timetable data={data.data}></Timetable>;
   }
 }
