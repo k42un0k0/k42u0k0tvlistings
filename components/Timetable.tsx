@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Head from "./Head/Head";
 import Column from "./Timetable/Column";
 import { Data, mapByCh } from "./Timetable/utils";
@@ -10,13 +10,37 @@ import styled from "styled-components";
 import { differenceInCalendarDays, startOfDay, format } from "date-fns";
 
 type Props = { data: Data };
+
+let scrollpersentage = 0;
+let h = 900;
 export default function Timetable({ data }: Props): JSX.Element {
   const [map, dateArr] = mapByCh(data.items);
   const [date, setDate] = useState(() => startOfDay(new Date()));
   const els = useRefList<HTMLDivElement>(data.items.length);
   const [index, setIndex] = useState(0);
+
+  const tableRef = useRef<HTMLDivElement>();
+  const containerRef = useRef<HTMLDivElement>();
+  const [height, setHeight] = useState(h);
+  useEffect(() => {
+    function onWheel(e: WheelEvent) {
+      if (e.ctrlKey) {
+        e.preventDefault();
+        scrollpersentage = window.scrollY / document.body.scrollHeight;
+        h = h * (e.deltaY > 0 ? 1.02 : 1 / 1.02);
+        setHeight(h);
+      }
+    }
+    tableRef.current.addEventListener("wheel", onWheel, { passive: false });
+  }, []);
+  useEffect(() => {
+    containerRef.current.style.height = height + "px";
+    window.scrollTo({
+      top: document.body.scrollHeight * scrollpersentage,
+    });
+  }, [height]);
   return (
-    <Container>
+    <Container ref={containerRef}>
       <DateList>
         {dateArr.map((d) => {
           return (
@@ -58,7 +82,7 @@ export default function Timetable({ data }: Props): JSX.Element {
       >
         {[...Array(25).fill(null).keys()].map((i) => {
           if (i == 24) {
-            return <div></div>;
+            return <div key={i}></div>;
           }
           return (
             <div key={i} style={{ borderTop: "1px solid #999" }}>
@@ -108,6 +132,7 @@ export default function Timetable({ data }: Props): JSX.Element {
         // onChangeIndex={(index) => {
         //   setIndex(index);
         // }}
+        ref={tableRef}
       >
         {[...map.entries()].map((entity, i) => {
           return (
@@ -117,6 +142,7 @@ export default function Timetable({ data }: Props): JSX.Element {
               ref={els.current[i]}
               entity={entity}
               indexmod12={i % 12}
+              height={height}
             />
           );
         })}
@@ -126,14 +152,17 @@ export default function Timetable({ data }: Props): JSX.Element {
 }
 
 const Container = styled.div`
+  height: 100vh;
+  width: 100%;
   display: grid;
   flex-direction: column;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto auto 1fr;
+  background-color: white;
+  z-index: 1;
 `;
 
 const DateList = styled.ul`
-  padding-top: 20px;
   display: flex;
   justify-content: center;
   grid-column: 1 / span 2;

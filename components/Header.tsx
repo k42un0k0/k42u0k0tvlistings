@@ -24,10 +24,7 @@ export function Header() {
         <Note matches={matches}>
           <Astarisk>
             ※
-            <StyledLink
-              as="a"
-              href="https://www.tvkingdom.jp/schedulesBySearch.action"
-            >
+            <StyledLink as="a" href={sample}>
               テレビ王国
             </StyledLink>
             で検索した結果のURLを入力してください。
@@ -44,11 +41,13 @@ export function Header() {
 }
 
 const Container = styled.header`
+  position: fixed;
+  top: 0;
+  width: 100vw;
   padding: 1em;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
 `;
 
 const Title = styled.h2`

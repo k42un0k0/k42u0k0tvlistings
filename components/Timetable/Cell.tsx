@@ -1,5 +1,5 @@
 import { differenceInMinutes, startOfDay } from "date-fns";
-import { ReactElement, useLayoutEffect, useRef, useState } from "react";
+import { ReactElement, useEffect, useRef, useState } from "react";
 import { ParsedItem } from "./utils";
 import Tooltip from "@material-ui/core/Tooltip";
 import { withStyles } from "@material-ui/core/styles";
@@ -9,27 +9,27 @@ import styled from "styled-components";
 
 type Props = {
   item: ParsedItem;
+  height: number;
 };
 
-export default function Cell({ item }: Props): JSX.Element {
+export default function Cell({ item, height }: Props): JSX.Element {
   const [open, setOpen] = useState<boolean>(false);
   const [mouseOver, setMouseOver] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>();
   const refa = useRef<string>();
 
   // 親要素の大きさを単位日として自分の大きさと位置を計算する
-  useLayoutEffect(() => {
-    const parentHeight = ref.current.parentElement.clientHeight;
-    const minuteHeight = parentHeight / 24 / 60;
-    const height =
+  useEffect(() => {
+    const minuteHeight = height / 24 / 60;
+    const h =
       differenceInMinutes(item.content.end, item.content.start) * minuteHeight;
 
-    const top =
+    const t =
       differenceInMinutes(item.content.start, startOfDay(item.content.start)) *
       minuteHeight;
-    ref.current.style.height = height + "px";
-    ref.current.style.top = top + "px";
-  }, []);
+    ref.current.style.height = h + "px";
+    ref.current.style.top = t + "px";
+  }, [height]);
   return (
     <ClickAwayListener
       onClickAway={() => {

@@ -24,12 +24,14 @@ export default function Head<
   const headRef = useRef<HTMLElement>(null);
   useEffect(() => {
     const onResize = () => {
-      if (bodyRef && bodyRef.current && headRef.current) {
-        bodyRef.current.style.width = headRef.current.offsetWidth + "px";
-      }
+      requestAnimationFrame(() => {
+        if (bodyRef && bodyRef.current && headRef.current) {
+          bodyRef.current.style.width = headRef.current.clientWidth + "px";
+        }
+      });
     };
     if (bodyRef && bodyRef.current && headRef.current) {
-      bodyRef.current.style.width = headRef.current.offsetWidth + "px";
+      bodyRef.current.style.width = headRef.current.clientWidth + "px";
     }
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);

@@ -25,9 +25,8 @@ export default function Home(): JSX.Element {
 const Container = styled.div`
   display: grid;
   grid-template-rows: auto 1fr;
-  height: 200vh;
+  padding-top: 100px;
 `;
-
 type ContentProps = {
   error: any;
   data: AxiosResponse<Data>;
