@@ -9,14 +9,13 @@ import styled from "styled-components";
 
 type Props = {
   item: ParsedItem;
-  height: number;
+  height;
 };
 
 export default function Cell({ item, height }: Props): JSX.Element {
   const [open, setOpen] = useState<boolean>(false);
   const [mouseOver, setMouseOver] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>();
-  const refa = useRef<string>();
 
   // 親要素の大きさを単位日として自分の大きさと位置を計算する
   useEffect(() => {
@@ -62,7 +61,6 @@ export default function Cell({ item, height }: Props): JSX.Element {
 const Container = styled.div`
   padding: 1px;
   position: absolute;
-  width: 100%;
 `;
 
 const Content = styled.div`
