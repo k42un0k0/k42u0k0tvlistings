@@ -15,12 +15,20 @@ export default function Timetable({ data }: Props): JSX.Element {
   const [height, setHeight] = useState(2000);
   const containerRef = useRef<HTMLDivElement>();
   const contentRef = useRef<HTMLDivElement>();
+  const timeListRef = useRef<HTMLUListElement>();
   useEffect(() => {
     window.addEventListener("scroll", () => {
       if (containerRef.current.getBoundingClientRect().y < 0) {
         containerRef.current.style.overflowY = "scroll";
       } else {
         containerRef.current.style.overflowY = "hidden";
+      }
+    });
+    containerRef.current.addEventListener("scroll", () => {
+      if (containerRef.current.scrollTop === 0) {
+        document.body.style.overflowY = "auto";
+      } else {
+        document.body.style.overflowY = "hidden";
       }
     });
     contentRef.current.addEventListener(
@@ -30,18 +38,23 @@ export default function Timetable({ data }: Props): JSX.Element {
           e.preventDefault();
           scrollpercentage =
             containerRef.current.scrollTop / containerRef.current.scrollHeight;
-          setHeight((state) => state * (e.deltaY > 0 ? 1.05 : 1 / 1.05));
+          setHeight((state) => {
+            const newState = state * (e.deltaY > 0 ? 1.02 : 1 / 1.02);
+            const min = window.innerHeight - timeListRef.current.offsetHeight;
+            if (newState < min) {
+              return min;
+            }
+            return newState;
+          });
         }
       },
       { passive: false }
     );
   }, []);
   useEffect(() => {
-    requestAnimationFrame(() => {
-      contentRef.current.style.height = height + "px";
-      containerRef.current.scrollTo({
-        top: containerRef.current.scrollHeight * scrollpercentage,
-      });
+    contentRef.current.style.height = height + "px";
+    containerRef.current.scrollTo({
+      top: containerRef.current.scrollHeight * scrollpercentage,
     });
   }, [height]);
   return (
@@ -59,7 +72,7 @@ export default function Timetable({ data }: Props): JSX.Element {
           );
         })}
       </DateList>
-      <Header>
+      <Header ref={timeListRef}>
         {[...map.keys()].map((key) => {
           return <Head key={key}>{key}</Head>;
         })}
@@ -79,7 +92,13 @@ export default function Timetable({ data }: Props): JSX.Element {
                   return true;
                 })
                 .map((item) => {
-                  return <Cell key={item.title + item.date} item={item} />;
+                  return (
+                    <Cell
+                      key={item.title + item.date}
+                      item={item}
+                      height={height}
+                    />
+                  );
                 })}
             </Column>
           );
@@ -94,8 +113,9 @@ const Container = styled.div`
   position: sticky;
   top: 0;
   overflow-x: scroll;
+  overflow-y: hidden;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto;
   grid-template-columns: auto 1fr;
 `;
 
@@ -137,6 +157,7 @@ const DateList = styled.ul`
 `;
 const DateListItem = styled.li`
   border-top: 1px solid #ccc;
+  height: 0;
 `;
 const Content = styled.div`
   grid-row: 2 / span 1;

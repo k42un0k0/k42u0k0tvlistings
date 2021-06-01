@@ -9,16 +9,17 @@ import styled from "styled-components";
 
 type Props = {
   item: ParsedItem;
+  height;
 };
 
-export default function Cell({ item }: Props): JSX.Element {
+export default function Cell({ item, height }: Props): JSX.Element {
   const [open, setOpen] = useState<boolean>(false);
   const [mouseOver, setMouseOver] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>();
 
   // 親要素の大きさを単位日として自分の大きさと位置を計算する
   useEffect(() => {
-    const minuteHeight = ref.current.parentElement.clientHeight / 24 / 60;
+    const minuteHeight = height / 24 / 60;
     const h =
       differenceInMinutes(item.content.end, item.content.start) * minuteHeight;
 
@@ -27,7 +28,7 @@ export default function Cell({ item }: Props): JSX.Element {
       minuteHeight;
     ref.current.style.height = h + "px";
     ref.current.style.top = t + "px";
-  });
+  }, [height]);
   return (
     <ClickAwayListener
       onClickAway={() => {
