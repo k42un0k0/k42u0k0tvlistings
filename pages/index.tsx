@@ -5,6 +5,7 @@ import { Data } from "../components/Timetable/utils";
 import { Header } from "../components/Header";
 import { useUrlInQuery, useUrlInQueryEffect } from "../components/hooks";
 import { generateRssUrl } from "../lib/rss";
+import { Timetable } from "../components/Timetable";
 
 export default function Home(): JSX.Element {
   const [urlInQuery] = useUrlInQuery();
@@ -36,6 +37,6 @@ function Content({ error, data, urlInQuery }: ContentProps): JSX.Element {
   } else if (data == null) {
     return <div>Now Loading...</div>;
   } else {
-    return <div></div>;
+    return <Timetable></Timetable>;
   }
 }
