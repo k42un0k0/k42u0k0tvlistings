@@ -41,9 +41,7 @@ export function Header() {
 }
 
 const Container = styled.header`
-  position: fixed;
-  top: 0;
-  width: 100vw;
+  position: relative;
   padding: 1em;
   display: flex;
   align-items: center;
