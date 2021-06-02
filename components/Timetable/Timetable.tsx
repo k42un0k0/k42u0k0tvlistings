@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
-import { Data, mapByCh } from "./utils";
+import { Data, mapByCh, useScrollControllable } from "./utils";
 import Cell from "./Cell";
 import { differenceInCalendarDays, startOfDay } from "date-fns";
 
@@ -14,23 +14,10 @@ export default function Timetable({ data }: Props): JSX.Element {
   const [date, setDate] = useState(() => startOfDay(new Date()));
   const [height, setHeight] = useState(2000);
   const containerRef = useRef<HTMLDivElement>();
+  useScrollControllable(containerRef);
   const contentRef = useRef<HTMLDivElement>();
   const timeListRef = useRef<HTMLUListElement>();
   useEffect(() => {
-    window.addEventListener("scroll", () => {
-      if (containerRef.current.getBoundingClientRect().y < 0) {
-        containerRef.current.style.overflowY = "scroll";
-      } else {
-        containerRef.current.style.overflowY = "hidden";
-      }
-    });
-    containerRef.current.addEventListener("scroll", () => {
-      if (containerRef.current.scrollTop === 0) {
-        document.body.style.overflowY = "auto";
-      } else {
-        document.body.style.overflowY = "hidden";
-      }
-    });
     contentRef.current.addEventListener(
       "wheel",
       (e: WheelEvent) => {

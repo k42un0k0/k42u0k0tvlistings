@@ -2,6 +2,7 @@ import { useMediaQuery } from "@material-ui/core";
 import Link from "next/link";
 import React from "react";
 import styled from "styled-components";
+import { useIsSp } from "../lib/utils";
 import { generatePathnameWithQuery, useUrlInQuery } from "./hooks";
 import Input from "./Input";
 
@@ -10,7 +11,7 @@ const sample =
 
 export function Header() {
   const [urlInQuery, setUrlInQuery] = useUrlInQuery();
-  const matches = useMediaQuery((theme: any) => theme.breakpoints.up("sm"));
+  const isSp = useIsSp();
   return (
     <Container>
       <Title>番組表</Title>
@@ -21,7 +22,7 @@ export function Header() {
             setUrlInQuery(e.target.value);
           }}
         />
-        <Note matches={matches}>
+        <Note matches={isSp}>
           <Astarisk>
             ※
             <StyledLink as="a" href={sample}>

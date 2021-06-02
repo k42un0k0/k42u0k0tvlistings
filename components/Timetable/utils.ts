@@ -6,7 +6,32 @@ import {
   differenceInCalendarDays,
   startOfDay,
 } from "date-fns";
+import { MutableRefObject, RefObject, Ref, useEffect, useRef } from "react";
 
+export function useScrollControllable<E extends HTMLElement>(
+  containerRef: MutableRefObject<E>
+) {
+  useEffect(() => {
+    const onScroll = () => {
+      if (containerRef.current.getBoundingClientRect().y < 0) {
+        containerRef.current.style.overflowY = "scroll";
+      } else {
+        containerRef.current.style.overflowY = "hidden";
+      }
+    };
+    window.addEventListener("scroll", onScroll);
+    containerRef.current.addEventListener("scroll", () => {
+      if (containerRef.current.scrollTop === 0) {
+        document.body.style.overflowY = "auto";
+      } else {
+        document.body.style.overflowY = "hidden";
+      }
+    });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  });
+}
 export function mapByCh(items: Item[]): [Map<string, ParsedItem[]>, Date[]] {
   const map = new Map<string, ParsedItem[]>();
   let prevDate = startOfDay(new Date());
