@@ -18,25 +18,25 @@ export default function Timetable({ data }: Props): JSX.Element {
   const contentRef = useRef<HTMLDivElement>();
   const timeListRef = useRef<HTMLUListElement>();
   useEffect(() => {
-    contentRef.current.addEventListener(
-      "wheel",
-      (e: WheelEvent) => {
-        if (e.ctrlKey) {
-          e.preventDefault();
-          scrollpercentage =
-            containerRef.current.scrollTop / containerRef.current.scrollHeight;
-          setHeight((state) => {
-            const newState = state * (e.deltaY > 0 ? 1.02 : 1 / 1.02);
-            const min = window.innerHeight - timeListRef.current.offsetHeight;
-            if (newState < min) {
-              return min;
-            }
-            return newState;
-          });
-        }
-      },
-      { passive: false }
-    );
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey && containerRef.current) {
+        e.preventDefault();
+        scrollpercentage =
+          containerRef.current.scrollTop / containerRef.current.scrollHeight;
+        setHeight((state) => {
+          const newState = state * (e.deltaY > 0 ? 1.02 : 1 / 1.02);
+          const min = window.innerHeight - timeListRef.current.offsetHeight;
+          if (newState < min) {
+            return min;
+          }
+          return newState;
+        });
+      }
+    };
+    contentRef.current.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      contentRef.current?.removeEventListener("wheel", onWheel);
+    };
   }, []);
   useEffect(() => {
     contentRef.current.style.height = height + "px";

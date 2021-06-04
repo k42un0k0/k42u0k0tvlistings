@@ -61,6 +61,7 @@ export default function Cell({ item, height }: Props): JSX.Element {
 const Container = styled.div`
   padding: 1px;
   position: absolute;
+  width: 100%;
 `;
 
 const Content = styled.div`

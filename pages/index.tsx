@@ -5,7 +5,8 @@ import { Data } from "../components/Timetable/utils";
 import { Header } from "../components/Header";
 import { useUrlInQuery, useUrlInQueryEffect } from "../components/hooks";
 import { generateRssUrl } from "../lib/rss";
-import { Timetable } from "../components/Timetable";
+import { Timetable, TimetableSp } from "../components/Timetable";
+import { useIsSp } from "../lib/utils";
 
 export default function Home(): JSX.Element {
   const [urlInQuery] = useUrlInQuery();
@@ -30,6 +31,7 @@ type ContentProps = {
 };
 
 function Content({ error, data, urlInQuery }: ContentProps): JSX.Element {
+  const isSp = useIsSp();
   if (error != null) {
     return <div>エラーが起きてるようです、検索欄を確認してください</div>;
   } else if (urlInQuery === "") {
@@ -37,6 +39,10 @@ function Content({ error, data, urlInQuery }: ContentProps): JSX.Element {
   } else if (data == null) {
     return <div>Now Loading...</div>;
   } else {
-    return <Timetable data={data.data}></Timetable>;
+    return isSp ? (
+      <Timetable data={data.data}></Timetable>
+    ) : (
+      <TimetableSp data={data.data} />
+    );
   }
 }
