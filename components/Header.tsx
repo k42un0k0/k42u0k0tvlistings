@@ -2,8 +2,8 @@ import { useMediaQuery } from "@material-ui/core";
 import Link from "next/link";
 import React from "react";
 import styled from "styled-components";
-import { useIsSp } from "../lib/utils";
-import { generatePathnameWithQuery, useUrlInQuery } from "./hooks";
+import { createPathnameWithQuery } from "../lib/path";
+import { useUrlInQuery, useIsSp } from "./hooks";
 import Input from "./Input";
 
 const sample =
@@ -25,15 +25,15 @@ export function Header() {
         <Note matches={isSp}>
           <Astarisk>
             ※
-            <StyledLink as="a" href={sample}>
-              テレビ王国
-            </StyledLink>
+            <Link href={sample}>
+              <StyledLink>テレビ王国</StyledLink>
+            </Link>
             で検索した結果のURLを入力してください。
           </Astarisk>
           <div>
-            <StyledLink as="a" href={generatePathnameWithQuery(sample)}>
-              サンプル
-            </StyledLink>
+            <Link href={createPathnameWithQuery(sample)}>
+              <StyledLink>サンプル</StyledLink>
+            </Link>
           </div>
         </Note>
       </Grow>
@@ -79,6 +79,6 @@ const Note = styled.div<{ matches: boolean }>`
     `}
 `;
 
-const StyledLink = styled(Link)`
+const StyledLink = styled.a`
   color: blue;
 `;

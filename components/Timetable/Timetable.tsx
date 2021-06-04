@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
-import { Data, mapByCh, useScrollControllable } from "./utils";
+import { Data, mapByCh, useStepScroll } from "./utils";
 import Cell from "./Cell";
 import { differenceInCalendarDays, startOfDay } from "date-fns";
+import { renderEntries, renderKeys, renderWithLength } from "../../lib/render";
 
 type Props = {
   data: Data;
@@ -13,8 +14,10 @@ export default function Timetable({ data }: Props): JSX.Element {
   const [map, dateArr] = mapByCh(data.items);
   const [date, setDate] = useState(() => startOfDay(new Date()));
   const [height, setHeight] = useState(2000);
+
+  // ステップスクロールとズーム
   const containerRef = useRef<HTMLDivElement>();
-  useScrollControllable(containerRef);
+  useStepScroll(containerRef);
   const contentRef = useRef<HTMLDivElement>();
   const timeListRef = useRef<HTMLUListElement>();
   useEffect(() => {
@@ -48,7 +51,7 @@ export default function Timetable({ data }: Props): JSX.Element {
     <Container ref={containerRef}>
       <Pad></Pad>
       <DateList>
-        {[...Array(25).fill(null).keys()].map((i) => {
+        {renderWithLength(25, (i) => {
           if (i == 24) {
             return <div key={i} />;
           }
@@ -60,12 +63,12 @@ export default function Timetable({ data }: Props): JSX.Element {
         })}
       </DateList>
       <Header ref={timeListRef}>
-        {[...map.keys()].map((key) => {
+        {renderKeys(map, (key) => {
           return <Head key={key}>{key}</Head>;
         })}
       </Header>
       <Content ref={contentRef}>
-        {[...map.entries()].map(([key, items]) => {
+        {renderEntries(map, ([key, items]) => {
           return (
             <Column key={key}>
               {items

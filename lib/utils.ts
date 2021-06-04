@@ -1,5 +1,3 @@
-import { useMediaQuery } from "@material-ui/core";
-
 export function debounce<CB extends (...args: any[]) => void>(
   cb: CB,
   ms: number
@@ -7,6 +5,7 @@ export function debounce<CB extends (...args: any[]) => void>(
   let t: number = 0;
   return function (...args: Parameters<CB>) {
     clearTimeout(t);
+    // @ts-ignore
     t = setTimeout(() => cb(...args), ms);
   };
 }
@@ -29,7 +28,3 @@ const colors = [
   { end: "#ffff8e", start: "#ffffe5" },
   { end: "#ffc68e", start: "#fff2e5" },
 ];
-
-export function useIsSp(): boolean {
-  return useMediaQuery((theme: any) => theme.breakpoints.up("sm"));
-}

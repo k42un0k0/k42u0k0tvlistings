@@ -1,15 +1,17 @@
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
-import { Data, mapByCh, useScrollControllable } from "./utils";
+import { Data, mapByCh } from "./utils";
 import Cell from "./Cell";
 import { differenceInCalendarDays, startOfDay } from "date-fns";
 import SwipeableViews from "react-swipeable-views";
+import { renderWithLength } from "../../lib/render";
+import { entries, keys } from "../../lib/map";
 type Props = {
   data: Data;
 };
 
 let scrollpercentage = 0;
-export default function Timetable({ data }: Props): JSX.Element {
+export default function TimetableSp({ data }: Props): JSX.Element {
   const [map, dateArr] = mapByCh(data.items);
   const [date, setDate] = useState(() => startOfDay(new Date()));
   const [height, setHeight] = useState(1000);
@@ -35,7 +37,7 @@ export default function Timetable({ data }: Props): JSX.Element {
     <Container>
       <Pad />
       <DateList>
-        {[...Array(25).fill(null).keys()].map((i) => {
+        {renderWithLength(25, (i) => {
           if (i == 24) {
             return <div key={i} />;
           }
@@ -48,13 +50,13 @@ export default function Timetable({ data }: Props): JSX.Element {
       </DateList>
       <Header>
         <div ref={headerRef} style={{ display: "flex" }}>
-          {[...map.keys()].map((key) => {
+          {keys(map).map((key) => {
             return <Head key={key}>{key}</Head>;
           })}
         </div>
       </Header>
       <SwipeableViews style={{ width: "100%" }} ref={ref}>
-        {[...map.entries()].map(([key, items]) => {
+        {entries(map).map(([key, items]) => {
           return (
             <Content key={key}>
               <Column style={{ height }}>

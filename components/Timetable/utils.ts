@@ -7,8 +7,9 @@ import {
   startOfDay,
 } from "date-fns";
 import { MutableRefObject, RefObject, Ref, useEffect, useRef } from "react";
+import { entries } from "../../lib/map";
 
-export function useScrollControllable<E extends HTMLElement>(
+export function useStepScroll<E extends HTMLElement>(
   containerRef: MutableRefObject<E>
 ) {
   useEffect(() => {
@@ -47,7 +48,7 @@ export function mapByCh(items: Item[]): [Map<string, ParsedItem[]>, Date[]] {
     map.set(parsedItem.content.ch, arr.concat(parsedItem));
   });
   const sortedMap = new Map(
-    [...map.entries()].sort(([a], [b]) => {
+    entries(map).sort(([a], [b]) => {
       const ach = parseInt(a.match(/\(Ch.(\d*)\)/)?.[1]) || a;
       const bch = parseInt(b.match(/\(Ch.(\d*)\)/)?.[1]) || b;
       if (ach > bch || typeof ach == "string") return 1;

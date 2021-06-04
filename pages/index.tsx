@@ -3,10 +3,13 @@ import useSWR from "swr";
 import styled from "styled-components";
 import { Data } from "../components/Timetable/utils";
 import { Header } from "../components/Header";
-import { useUrlInQuery, useUrlInQueryEffect } from "../components/hooks";
+import {
+  useIsSp,
+  useUrlInQuery,
+  useUrlInQueryEffect,
+} from "../components/hooks";
 import { generateRssUrl } from "../lib/rss";
 import { Timetable, TimetableSp } from "../components/Timetable";
-import { useIsSp } from "../lib/utils";
 
 export default function Home(): JSX.Element {
   const [urlInQuery] = useUrlInQuery();
