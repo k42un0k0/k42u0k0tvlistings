@@ -10,6 +10,7 @@ import {
 } from "../components/hooks";
 import { generateRssUrl } from "../lib/rss";
 import loadable from "@loadable/component";
+import Head from "next/head";
 
 const TimetableSp = loadable(
   () => import("../components/Timetable/TimetableSp")
@@ -23,10 +24,16 @@ export default function Home(): JSX.Element {
     (url) => axios.get(generateRssUrl(url))
   );
   return (
-    <Container>
-      <Header />
-      <Content error={error} data={data} urlInQuery={urlInQuery as string} />
-    </Container>
+    <>
+      <Head>
+        <title>K42un0k0 TV Listings</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <Container>
+        <Header />
+        <Content error={error} data={data} urlInQuery={urlInQuery as string} />
+      </Container>
+    </>
   );
 }
 
