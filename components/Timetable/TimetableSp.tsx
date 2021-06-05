@@ -37,10 +37,7 @@ export default function TimetableSp({ data }: Props): JSX.Element {
     <Container>
       <Pad />
       <DateList>
-        {renderWithLength(25, (i) => {
-          if (i == 24) {
-            return <div key={i} />;
-          }
+        {renderWithLength(24, (i) => {
           return (
             <DateListItem key={i}>
               {i.toString().padStart(2, "0")}:00
@@ -111,12 +108,14 @@ const DateList = styled.ul`
   grid-area: 2/1/3/2;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-
   background-color: #999;
 `;
 const DateListItem = styled.li`
   border-top: 1px solid #ccc;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Content = styled.div`

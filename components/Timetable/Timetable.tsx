@@ -51,10 +51,7 @@ export default function Timetable({ data }: Props): JSX.Element {
     <Container ref={containerRef}>
       <Pad></Pad>
       <DateList>
-        {renderWithLength(25, (i) => {
-          if (i == 24) {
-            return <div key={i} />;
-          }
+        {renderWithLength(24, (i) => {
           return (
             <DateListItem key={i}>
               {i.toString().padStart(2, "0")}:00
@@ -142,10 +139,13 @@ const DateList = styled.ul`
   background-color: #999;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   z-index: 1;
 `;
 const DateListItem = styled.li`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-top: 1px solid #ccc;
   height: 0;
 `;
