@@ -18,8 +18,9 @@ export default function Input({ value: p_value, onChange }: Props) {
   );
   return (
     <Container>
-      <Tooltip>検索</Tooltip>
+      <Tooltip htmlFor="search">検索</Tooltip>
       <Base
+        id="search"
         value={value}
         onChange={(e) => {
           e.persist();
@@ -48,7 +49,7 @@ const Container = styled.div`
   position: relative;
 `;
 
-const Tooltip = styled.div`
+const Tooltip = styled.label`
   position: absolute;
   border-radius: 500px;
   font-size: 12px;
