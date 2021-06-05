@@ -9,8 +9,12 @@ import {
   useUrlInQueryEffect,
 } from "../components/hooks";
 import { generateRssUrl } from "../lib/rss";
-import { Timetable, TimetableSp } from "../components/Timetable";
+import loadable from "@loadable/component";
 
+const TimetableSp = loadable(
+  () => import("../components/Timetable/TimetableSp")
+);
+const Timetable = loadable(() => import("../components/Timetable/Timetable"));
 export default function Home(): JSX.Element {
   const [urlInQuery] = useUrlInQuery();
   useUrlInQueryEffect();
